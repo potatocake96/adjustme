@@ -267,17 +267,10 @@ document.getElementById('signin').onclick = async function(){
 
   // Local redirect guard for reset emails
   function resetRedirectURL(){
-  try{
-    if (location.protocol === 'http:' || location.protocol === 'https:'){
-      return location.origin + location.pathname;
-    }
-  }catch(e){}
-  return 'https://USERNAME.github.io/REPO/login.html'; // fallback for environments without origin
-}
-  }catch(e){}
-  // Fallback for file:// (open a local server at 5173 if possible)
-  return 'http://localhost:5173' + (location.pathname || '/login.html');
-}
+    try{
+      if (location.protocol === 'http:' || location.protocol === 'https:'){
+        return location.origin + location.pathname;
+      }
     }catch(e){}
     return 'http://localhost:5173/login.html';
   }

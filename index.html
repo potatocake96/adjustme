@@ -85,14 +85,14 @@ document.addEventListener('DOMContentLoaded', function(){
 
     /* Falling "adjustment" tags */
     .rain{ opacity: .5; }
-    .drop{position:absolute;will-change:transform;animation:fallY linear infinitetop:-60px; will-change:top; animation:fallY linear infinite}
+    .drop{position:absolute; top:-60px; will-change:transform, top; animation:fallY linear infinite;}
     .tag{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;border:1px solid rgba(16,185,129,.35);background:rgba(16,185,129,.22);color:#0b3b2f;font-weight:800;font-size:14px;box-shadow:0 8px 16px rgba(2,6,23,.10)}
     .tag .em{font-size:14px}
-    @keyframes fallY { 0% { top:-60px; transform: translateX(0); } 100% { top: calc(100% + 60px); transform: translateX(var(--sway)); } }100%{top:calc(100% + 60px)}}100%{transform:translateY(110vh) rotate(6deg)}}
+    100%{top:calc(100% + 60px)}}100%{transform:translateY(110vh) rotate(6deg)}}
 
     /* Reduce motion */
     @media (prefers-reduced-motion: reduce){
-      .drop{animation:nonetop:-60px; will-change:top; animation:fallY linear infinite}
+      .drop{animation:none !important;}
     }
 
     /* Sections */
@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function(){
   for (let i=0;i<count;i++){
     const d = document.createElement('div');
     d.className = 'drop';
-    const pick = tokens[Math.floor(Math.random()*tokens.length)];
+    const pick = tk[Math.floor(Math.random()*tk.length)];
     const useEmoji = Math.random() < 0.12 && pick.cat !== 'satire';
     const text = useEmoji ? emojis[Math.floor(Math.random()*emojis.length)] : pick.text;
     const cls = 'tag cat-' + pick.cat;
