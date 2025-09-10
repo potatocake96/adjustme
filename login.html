@@ -3,7 +3,7 @@
   --bg:#F7FAF9; --surface:#FFFFFF; --ink:#0B1220; --ink-2:#475569; --muted:#667085; --border:#E6E8EC;
   --brand:#10B981; --brand-2:#2DD4BF; --brand-3:#ECFDF5;
   --focus:0 0 0 3px rgba(16,185,129,.35);
-  --max:1280px; --radius:16px; --radius-lg:22px; --radius-xl:28px;
+--max:1280px; --radius:16px; --radius-lg:22px; --radius-xl:28px;
   --shadow-sm:0 8px 18px rgba(2,6,23,.06); --shadow:0 24px 50px rgba(2,6,23,.12);
   --dur-fast:.16s; --dur:.28s; --dur-slow:.45s; --ease:cubic-bezier(.22,.61,.36,1)
 }
@@ -104,90 +104,35 @@ footer .foot{display:flex;justify-content:space-between;align-items:center;gap:1
 /* Motion */
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
-
-/* --- Mobile layout fixes --- */
-@media (max-width: 640px) {
-  .wrap {
-    padding: 12px 14px;
-  }
-
-  header .brand .word {
-    font-size: 16px;
-  }
-
-  .card-pad {
-    padding: 16px;
-  }
-
-  .row.two, .row.actions {
-    grid-template-columns: 1fr !important;
-  }
-
-  .row.actions .btn.primary {
-    width: 100% !important;
-    min-width: unset;
-  }
-
-  input, select, textarea, button {
-    font-size: 16px; /* prevents iOS zoom on focus */
-  }
-
-  .cards-grid,
-  .app-grid,
-  .hero-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  .modal {
-    width: 95% !important;
-    margin: 0 auto;
-  }
-
-  nav.nav {
-    gap: 6px;
-  }
-
-  .chip {
-    padding: 8px 10px;
-    font-size: 14px;
-    min-height: 34px;
-  }
-}
-
-
-/* --- Deeper mobile fixes (v2) --- */
-@media (max-width: 640px) {
-  .section-title { font-size: 18px; }
-  .item .top { display: block; }
-  .item .righttools { justify-content: flex-start; margin-top: 8px; flex-wrap: nowrap; gap: 10px; }
-  .item .righttools label.small { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
-  .item .righttools .btn { min-height: 36px; padding: 6px 10px; }
-  .item h4 { font-size: 15px; }
-  .item .meta { font-size: 12px; }
-  .brand .word { font-size: 16px; }
-  header .wrap { padding: 10px 12px !important; }
-  .nav { min-height: 40px; }
-  .chip { padding: 8px 10px; font-size: 14px; min-height: 34px; }
-  #how { grid-template-columns: 1fr !important; }
-}
-/* Ensure the righttools don't compress into a few-pixel column */
-.item .righttools { flex: 0 0 auto; }
-
-</style></head><body>
-<header><div class="wrap" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0"><div class="brand"><span class="word">adjust<span class="me">ME</span></span></div><div class="navwrap"><nav class="nav"><a class="chip" href="index.html">Home</a></nav></div></div></header>
+</style><style>
+/* Index-like header & margins */
+.wrap{width:100%;max-width:var(--max);margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.85);backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--border)}
+.head{display:flex;justify-content:space-between;align-items:center;min-height:62px}
+.brand .word{font-size:18px}.brand .me{color:var(--brand)}
+</style>
+</head><body>
+<header>
+  <div class="wrap head">
+    <div class="brand"><span class="word">adjust<span class="me">ME</span></span></div>
+    <div class="spacer"></div>
+    <nav class="nav"><a href="index.html" class="chip" id="btnHome" style="text-decoration:none">Return home</a></nav>
+  </div>
+</header>
 <main class="wrap" style="display:grid; place-items:center; min-height:calc(100vh - 120px)"><section class="card card-pad" style="width:min(520px,92vw)">
-<h2 class="section-title">Sign in</h2><div class="grid" style="grid-template-columns:1fr;gap:12px"><div><label class="small">Email</label><input id="email" type="email" placeholder="you@example.com" inputmode="email" autocomplete="username"/></div><div><label class="small">Password</label><input id="password" type="password" placeholder="••••••••" autocomplete="current-password"/></div><div class="stack right" style="margin-top:6px"><button id="signup" class="btn">Create account</button><span id="spinnerSignin" class="spinner" style="display:none"></span><button id="signin" class="btn primary">Continue</button></div><div id="msg" class="small" aria-live="polite"></div></div>
+<h2 class="section-title">Sign in</h2><div class="grid" style="grid-template-columns:1fr;gap:12px"><div><label class="small">Email</label><input id="email" type="email" placeholder="you@example.com" inputmode="email" autocomplete="username"/></div><div><label class="small">Password</label><input id="password" type="password" placeholder="••••••••" autocomplete="current-password"/><div class=\"note\" style=\"margin-top:6px\"><a href=\"#\" id=\"linkForgot\">Forgot password?</a></div></div><div class="stack right" style="margin-top:6px"><span id="spinnerSignin" class="spinner" style="display:none"></span><button id="signin" class="btn primary">Continue</button>
+        <button id="signupBtn" class="btn ghost" type="button">Create account</button></div><div id="msg" class="small" aria-live="polite"></div></div>
 </section></main><footer><div class="wrap foot"><div>© Simon Dass</div><div class="small">Private by design — only student profiles are saved.</div></div></footer>
 <script>
 document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('ready');});
-var supabase = window.supabase.createClient("https://fskoqwpzomolfywimrjj.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZza29xd3B6b21vbGZ5d2ltcmpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0MDg2NjEsImV4cCI6MjA3Mjk4NDY2MX0.KH9aTJgF9F2BGokJAjOtVkrjybTpVamvXGu7aVxGou8");
+window.sb = window.sb || window.supabase.createClient("https://fskoqwpzomolfywimrjj.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZza29xd3B6b21vbGZ5d2ltcmpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0MDg2NjEsImV4cCI6MjA3Mjk4NDY2MX0.KH9aTJgF9F2BGokJAjOtVkrjybTpVamvXGu7aVxGou8");
 function show(el,on){ el.style.display = on ? "" : "none"; }
 async function greet(name){ try { sessionStorage.setItem('adj_greet_name', name || ""); } catch(e){} }
 document.getElementById('signin').onclick = async function(){
   var email = document.getElementById('email').value.trim();
   var password = document.getElementById('password').value;
   show(document.getElementById('spinnerSignin'), true);
-  var res = await supabase.auth.signInWithPassword({ email: email, password: password });
+  var res = await sb.auth.signInWithPassword({ email: email, password: password });
   show(document.getElementById('spinnerSignin'), false);
   document.getElementById('msg').textContent = res.error ? res.error.message : "Signed in. Redirecting…";
   if (!res.error) {
@@ -197,11 +142,212 @@ document.getElementById('signin').onclick = async function(){
     location.href = "app.html";
   }
 };
-document.getElementById('signup').onclick = async function(){
-  var email = document.getElementById('email').value.trim();
-  var password = document.getElementById('password').value;
-  var res = await supabase.auth.signUp({ email: email, password: password });
-  document.getElementById('msg').textContent = res.error ? res.error.message : "Check your email to confirm, then sign in.";
-};
-(async function(){ var s = await supabase.auth.getSession(); if (s.data && s.data.session) location.href = "app.html"; })();
-</script></body></html>
+
+(async function(){ var s = await sb.auth.getSession(); if (s.data && s.data.session) location.href = "app.html"; })();
+</script>
+  <div id="resetBack" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="resetTitle" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <div id="resetTitle" class="modal-title">Reset password</div>
+        <button id="r_close" class="chip" style="min-height:32px;padding:6px 10px">Close</button>
+      </div>
+      <div class="modal-body">
+        <label class="small">Your email</label>
+        <input id="r_email" placeholder="you@school.edu.au"/>
+        <div id="r_msg" class="note" aria-live="polite" style="margin-top:8px"></div>
+      </div>
+      <div class="modal-actions">
+        <button id="r_send" class="cta">Send reset link</button>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+(function(){
+  var back = document.getElementById('resetBack');
+  var link = document.getElementById('openReset');
+  var btnClose = document.getElementById('r_close');
+  var btnSend = document.getElementById('r_send');
+  var msg = document.getElementById('r_msg');
+  function openReset(){ if (back){ back.style.display='flex'; back.classList.add('show'); var m = back.querySelector('.modal'); if(m) m.classList.add('show'); } }
+  function closeReset(){ if (back){ back.classList.remove('show'); var m = back.querySelector('.modal'); if(m) m.classList.remove('show'); setTimeout(()=>{back.style.display='none';}, 200); } if (msg) msg.textContent=''; }
+  if (link) link.addEventListener('click', function(e){ e.preventDefault(); openReset(); });
+  if (btnClose) btnClose.onclick = closeReset;
+  if (back) back.addEventListener('click', function(e){ if (e.target === back) closeReset(); });
+  if (btnSend) btnSend.onclick = async function(){
+    var email = (document.getElementById('r_email')?.value || '').trim();
+    if (!email){ if (msg) msg.textContent = 'Please enter your email.'; return; }
+    if (msg) msg.textContent = 'Sending…';
+    try{
+      const { data, error } = await sb.auth.resetPasswordForEmail(email);
+      if (error) throw error;
+      if (msg) msg.textContent = 'Check your email for the reset link.';
+    }catch(e){
+      if (msg) msg.textContent = (e && e.message) ? e.message : 'Failed to send reset email.';
+    }
+  };
+})();
+</script>
+
+
+  <div id="signupBack" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="signupTitle" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <div id="signupTitle" class="modal-title">Create an account</div>
+        <button id="closeSignup" class="btn">Close</button>
+      </div>
+      <div class="modal-body">
+        <div class="stack">
+          <div>
+            <label class="note">Full name</label>
+            <input id="su_name" class="input" placeholder="e.g., Alex Smith"/>
+          </div>
+          <div class="row">
+            <div>
+              <label class="note">Email</label>
+              <input id="su_email" class="input" placeholder="you@school.edu.au"/>
+            </div>
+            <div>
+              <label class="note">Password</label>
+              <input id="su_password" type="password" class="input" placeholder="Minimum 8 characters"/>
+            </div>
+          </div>
+          <div id="su_msg" class="note" aria-live="polite"></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="doSignup" class="btn primary">Create account</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="recoverBack" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="recoverTitle" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <div id="recoverTitle" class="modal-title">Set new password</div>
+        <button id="closeRecover" class="btn">Close</button>
+      </div>
+      <div class="modal-body">
+        <div class="stack">
+          <div class="row">
+            <div>
+              <label class="note">New password</label>
+              <input id="rp1" type="password" class="input" placeholder="Minimum 8 characters"/>
+            </div>
+            <div>
+              <label class="note">Confirm password</label>
+              <input id="rp2" type="password" class="input" placeholder="Repeat password"/>
+            </div>
+          </div>
+          <div id="rp_msg" class="note" aria-live="polite"></div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="doUpdate" class="btn primary">Update password</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    function show(id){ const b=document.getElementById(id); if(!b) return; b.style.display='flex'; b.classList.add('show'); b.querySelector('.modal')?.classList.add('show'); }
+    function hide(id){ const b=document.getElementById(id); if(!b) return; b.classList.remove('show'); b.querySelector('.modal')?.classList.remove('show'); b.style.display='none'; }
+  </script>
+
+
+<script>
+(function(){
+  // Init or reuse Supabase client
+  const SUPABASE_URL = window.SUPABASE_URL || "https://fskoqwpzomolfywimrjj.supabase.co";
+  const SUPABASE_ANON = window.SUPABASE_ANON || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZza29xd3B6b21vbGZ5d2ltcmpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0MDg2NjEsImV4cCI6MjA3Mjk4NDY2MX0.KH9aTJgF9F2BGokJAjOtVkrjybTpVamvXGu7aVxGou8";
+  window.sb = window.sb || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  const sb = window.sb;
+
+  // Local redirect guard for reset emails
+  function resetRedirectURL(){
+  try{
+    if (location.protocol === 'http:' || location.protocol === 'https:'){
+      // Redirect back to THIS login file (keeps your current filename)
+      return location.origin + location.pathname;
+    }
+  }catch(e){}
+  // Fallback for file:// (open a local server at 5173 if possible)
+  return 'http://localhost:5173' + (location.pathname || '/login.html');
+}
+    }catch(e){}
+    return 'http://localhost:5173/login.html';
+  }
+
+  // Forgot password link opens reset modal
+  const linkForgot = document.getElementById('openReset');
+  if (linkForgot) linkForgot.addEventListener('click', function(e){ e.preventDefault(); show('resetBack'); });
+
+  // Reset modal controls
+  document.getElementById('closeForgot')?.addEventListener('click', ()=> hide('resetBack'));
+  document.getElementById('resetBack')?.addEventListener('click', (e)=>{ if(e.target.id==='resetBack') hide('resetBack'); });
+  document.getElementById('r_send')?.addEventListener('click', async ()=>{
+    const email = document.getElementById('r_email')?.value?.trim();
+    const msg = document.getElementById('r_msg'); if (msg) msg.textContent = 'Sending…';
+    try{
+      const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: resetRedirectURL() });
+      if (error) throw error;
+      if (msg) msg.textContent = 'If that email exists, a reset link has been sent.';
+    }catch(e){ if (msg) msg.textContent = e?.message || String(e); }
+  });
+
+  // Signup modal controls
+  document.getElementById('openSignup')?.addEventListener('click', function(e){ e.preventDefault(); show('signupBack'); });
+  document.getElementById('closeSignup')?.addEventListener('click', ()=> hide('signupBack'));
+  document.getElementById('signupBack')?.addEventListener('click', (e)=>{ if(e.target.id==='signupBack') hide('signupBack'); });
+  document.getElementById('doSignup')?.addEventListener('click', async ()=>{
+    const name = document.getElementById('su_name')?.value?.trim();
+    const email = document.getElementById('su_email')?.value?.trim();
+    const password = document.getElementById('su_password')?.value;
+    const msg = document.getElementById('su_msg'); if (msg) msg.textContent = 'Creating account…';
+    try{
+      const { error } = await sb.auth.signUp({ email, password, options: { data: { full_name: name } } });
+      if (error) throw error;
+      if (msg) msg.textContent = 'Check your email to confirm your account.';
+    }catch(e){ if (msg) msg.textContent = e?.message || String(e); }
+  });
+
+  // Password recovery: handle Supabase recovery state and URL #
+  function showRecover(){ show('recoverBack'); }
+  document.getElementById('closeRecover')?.addEventListener('click', ()=> hide('recoverBack'));
+  document.getElementById('recoverBack')?.addEventListener('click', (e)=>{ if(e.target.id==='recoverBack') hide('recoverBack'); });
+
+  // Supabase event-based recovery
+  sb.auth.onAuthStateChange(async (event) => {
+    if (event === 'PASSWORD_RECOVERY'){ showRecover(); }
+  });
+
+  // Hash-based detection (fallback if event missed)
+  (function(){
+    try{
+      const hash = location.hash?.replace(/^#/, '') || '';
+      const qs = new URLSearchParams(hash);
+      const t = qs.get('type');
+      if (t === 'recovery'){ showRecover(); }
+    }catch(e){}
+  })();
+
+  // Update password handler
+  document.getElementById('doUpdate')?.addEventListener('click', async ()=>{
+    const p1 = document.getElementById('rp1')?.value || '';
+    const p2 = document.getElementById('rp2')?.value || '';
+    const msg = document.getElementById('rp_msg'); if (msg) msg.textContent = '';
+    if (p1.length < 8){ if (msg) msg.textContent = 'Password must be at least 8 characters.'; return; }
+    if (p1 !== p2){ if (msg) msg.textContent = 'Passwords do not match.'; return; }
+    try{
+      const { data, error } = await sb.auth.updateUser({ password: p1 });
+      if (error) throw error;
+      if (msg) msg.textContent = 'Password updated. Redirecting…';
+      setTimeout(()=>{ location.href = 'app.html'; }, 600);
+    }catch(e){ if (msg) msg.textContent = e?.message || String(e); }
+  });
+})();
+</script>
+
+</body></html>

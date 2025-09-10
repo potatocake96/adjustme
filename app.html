@@ -15,8 +15,26 @@ body{
 }
 body.ready{opacity:1;transform:none;transition:opacity var(--dur-slow) var(--ease),transform var(--dur-slow) var(--ease)}
 a{color:inherit;text-decoration:none}
-.wrap{width:100%;max-width:var(--max);margin:0 auto;padding:16px 20px}
+.wrap{width:100%;max-width:var(--page-max);margin:0 auto;padding:0 var(--page-pad)}
 /* Header / nav */
+
+/* Safe-area and consistent side padding on mobile + desktop */
+:root{ --page-pad: 20px; }
+header .wrap{ display:flex; justify-content:space-between; align-items:center; gap:16px;
+  padding-left: calc(var(--page-pad) + env(safe-area-inset-left));
+  padding-right: calc(var(--page-pad) + env(safe-area-inset-right));
+}
+.app-mobile-menu{
+  padding-left: calc(var(--page-pad) + env(safe-area-inset-left));
+  padding-right: calc(var(--page-pad) + env(safe-area-inset-right));
+  padding-top: 6px;
+}
+/* Dropdown aesthetics in header context */
+.app-mobile-menu select{
+  border-radius: 12px;
+  min-height: 44px;
+}
+
 header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.9);backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--border)}
 .brand{font-weight:900;letter-spacing:-.015em;display:flex;align-items:center;gap:10px}
 .brand .word{font-size:18px}.brand .me{color:var(--brand)}
@@ -105,77 +123,139 @@ footer .foot{display:flex;justify-content:space-between;align-items:center;gap:1
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
 
-/* --- Mobile layout fixes --- */
-@media (max-width: 640px) {
-  .wrap {
-    padding: 12px 14px;
-  }
-
-  header .brand .word {
-    font-size: 16px;
-  }
-
-  .card-pad {
-    padding: 16px;
-  }
-
-  .row.two, .row.actions {
-    grid-template-columns: 1fr !important;
-  }
-
-  .row.actions .btn.primary {
-    width: 100% !important;
-    min-width: unset;
-  }
-
-  input, select, textarea, button {
-    font-size: 16px; /* prevents iOS zoom on focus */
-  }
-
-  .cards-grid,
-  .app-grid,
-  .hero-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  .modal {
-    width: 95% !important;
-    margin: 0 auto;
-  }
-
-  nav.nav {
-    gap: 6px;
-  }
-
-  .chip {
-    padding: 8px 10px;
-    font-size: 14px;
-    min-height: 34px;
-  }
+/* Hide selection summary on small screens */
+@media (max-width: 768px){
+  #collectBox{ display:none !important; }
 }
 
 
-/* --- Deeper mobile fixes (v2) --- */
-@media (max-width: 640px) {
-  .section-title { font-size: 18px; }
-  .item .top { display: block; }
-  .item .righttools { justify-content: flex-start; margin-top: 8px; flex-wrap: nowrap; gap: 10px; }
-  .item .righttools label.small { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
-  .item .righttools .btn { min-height: 36px; padding: 6px 10px; }
-  .item h4 { font-size: 15px; }
-  .item .meta { font-size: 12px; }
-  .brand .word { font-size: 16px; }
-  header .wrap { padding: 10px 12px !important; }
-  .nav { min-height: 40px; }
-  .chip { padding: 8px 10px; font-size: 14px; min-height: 34px; }
-  #how { grid-template-columns: 1fr !important; }
+/* Stronger side gutters for header and mobile dropdown */
+header .wrap{ display:flex; justify-content:space-between; align-items:center; gap:16px;
+  padding-left: calc(var(--page-pad) + env(safe-area-inset-left));
+  padding-right: calc(var(--page-pad) + env(safe-area-inset-right));
+  gap: 20px;
 }
-/* Ensure the righttools don't compress into a few-pixel column */
-.item .righttools { flex: 0 0 auto; }
+/* Give the brand & actions breathing room */
+header .brand, header .logo, header h1{ margin-left: 4px; }
+header .actions, header nav{ margin-right: 4px; gap: 12px; }
+/* Mobile dropdown aligns to the same gutters and max width */
+.app-mobile-menu{
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding-left: calc(var(--page-pad) + env(safe-area-inset-left));
+  padding-right: calc(var(--page-pad) + env(safe-area-inset-right));
+}
+.app-mobile-menu select{ width:100%; border-radius: 12px; min-height: 44px; }
 
-</style></head><body>
+
+/* Mobile-only dropdown: hidden on desktop */
+.app-mobile-menu{ display:none; }
+@media (max-width: 768px){
+  .app-mobile-menu{ display:block; }
+  /* Hide desktop tab chips on mobile */
+  header .chip[data-tab]{ display:none !important; }
+}
+
+</style><style>
+/* --- UI polish --- */
+#generated input[type=checkbox]{accent-color:var(--brand);width:18px;height:18px}
+.item .top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.item .righttools{display:flex;align-items:center;gap:12px;white-space:nowrap}
+.item .righttools .btn{min-width:88px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+/* Selected tags */
+#collectBox .tag{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:#fff;font-size:12px}
+#collectBox .tag .x{cursor:pointer;opacity:.7}
+#collectBox .tag .x:hover{opacity:1}
+/* Modal loading row + spinner */
+.modal-loading{display:none;align-items:center;gap:10px;margin:8px 0}
+.spinner{width:16px;height:16px;border:2px solid rgba(0,0,0,.15);border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* Mobile nav dropdown */
+.app-mobile-menu{display:none;margin:8px 0 0}
+.app-mobile-menu select{width:100%;min-height:40px;border:1px solid var(--border);border-radius:10px;padding:8px 10px;background:#fff}
+@media (max-width: 768px){ .app-mobile-menu{display:block} }
+</style>
+<style>
+:root{
+  --page-pad: clamp(24px, 6vw, 48px);
+  --page-max: 1200px;
+}
+/* Keep content off the edges */
+.wrap{ max-width: var(--page-max); margin: 0 auto; padding-left: var(--page-pad); padding-right: var(--page-pad); }
+header{ position: sticky; top:0; z-index:60; background: rgba(255,255,255,.9); backdrop-filter: blur(6px); border-bottom:1px solid var(--border); }
+header .wrap{ display:flex; justify-content:space-between; align-items:center; gap:16px; display:flex; justify-content:space-between; align-items:center; gap:16px; padding-top:10px; padding-bottom:10px; }
+header nav{ display:flex; align-items:center; gap:10px; }
+/* Proportions for header controls */
+header .chip{ min-height:36px; padding:8px 14px; border-radius:999px; }
+/* Mobile nav: show dropdown, hide only view tabs (keep sign out) */
+.app-mobile-menu{ display:none; padding-bottom:10px; }
+.app-mobile-menu select{ width:100%; min-height:42px; border:1px solid var(--border); border-radius:10px; padding:10px 12px; background:#fff; }
+@media (max-width: 768px){
+  header .chip[data-tab]{ display:none !important; }
+  .app-mobile-menu{ display:block; }
+}
+/* Ensure cards and sections never touch screen edges */
+main.wrap{ padding-top: 16px; padding-bottom: 24px; }
+.page-grid{ gap:20px; }
+@media (min-width: 1024px){
+  .page-grid{ gap:24px; }
+}
+</style>
+<style>
+/* Header spacing to match index */
+.wrap{width:100%;max-width:var(--max);margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.85);backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--border)}
+.head{display:flex;justify-content:space-between;align-items:center;min-height:62px}
+.brand .word{font-size:18px}.brand .me{color:var(--brand)}
+.nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.chip{background:#fff;border:1px solid var(--border);border-radius:999px;min-height:36px;padding:8px 14px;cursor:pointer;font-weight:700;box-shadow:0 1px 0 rgba(2,6,23,.04)}
+/* Mobile-only dropdown */
+.app-mobile-menu{display:none;margin:8px 0 0}
+.app-mobile-menu select{width:100%;min-height:44px;border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:#fff}
+@media (max-width: 768px){
+  header .chip[data-tab]{ display:none !important; }
+  .app-mobile-menu{ display:block; }
+}
+</style>
+<style>
+/* Desktop tabs only; mobile dropdown only */
+.app-mobile-menu{ display:none; }
+@media (max-width: 768px){
+  header .chip[data-tab]{ display:none !important; }
+  .app-mobile-menu{ display:block; width:100%; margin-left:auto; }
+  .app-mobile-menu select{ width:100%; min-height:44px; border:1px solid var(--border); border-radius:12px; padding:10px 12px; background:#fff; }
+}
+</style>
+<style>
+/* --- Mobile-only dropdown & header layout --- */
+.head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.app-mobile-menu{ display:none; order:2; width:100%; }
+.app-mobile-menu select{ width:100%; min-height:44px; border:1px solid var(--border); border-radius:12px; padding:10px 12px; background:#fff }
+.nav{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+/* Desktop: tabs visible, dropdown hidden */
+@media (min-width: 769px){
+  .app-mobile-menu{ display:none !important; }
+}
+/* Mobile: dropdown visible, hide tabs; keep Sign out visible and aligned right */
+@media (max-width: 768px){
+  header .chip[data-tab]{ display:none !important; }
+  .app-mobile-menu{ display:block; }
+  .nav{ width:100%; justify-content:flex-end; }
+  #signout{ margin-top:6px; }
+}
+</style>
+</head><body>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<header><div class="wrap" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0"><div class="brand"><span class="word">adjust<span class="me">ME</span></span></div><div class="navwrap"><nav class="nav"><button class="chip active" data-tab="create">Create</button><button class="chip" data-tab="students">Students</button><button class="chip" data-tab="help">Help</button><button id="signout" class="chip">Sign out</button></nav></div></div></header>
+<header>
+  <div class="wrap head">
+    <div class="brand"><span class="word">adjust<span class="me">ME</span></span></div>
+      <div class="app-mobile-menu"><select id="appMenuSelect"></select></div>
+
+<div class="spacer"></div>
+    <div class="navwrap"><nav class="nav"><button class="chip" data-tab="create">Create</button><button class="chip" data-tab="students">Students</button><button class="chip" data-tab="help">Help</button><button id="signout" class="chip">Sign out</button></nav></div>
+  </div>
+</header>
 <main class="wrap">
   <div id="view-create" class="app-grid">
     <section class="card card-pad sticky-card">
@@ -192,6 +272,11 @@ footer .foot{display:flex;justify-content:space-between;align-items:center;gap:1
       </div>
       <div id="genMsg" class="small" style="margin-top:8px"></div>
       <div class="stack" style="margin-top:10px"><button id="btnCollate" class="btn" disabled>Make paragraph</button><button id="btnClear" class="btn">Clear</button></div>
+      <div id="collectBox" class="card" style="margin:12px 0 0; border-style:dashed; display:none">
+        <div class="small" style="margin-bottom:6px">Selected for paragraph</div>
+        <div id="collectTags" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+      </div>
+    
     </section>
     <section class="card card-pad">
       <h3 class="section-title" style="font-size:20px">Generated items</h3>
@@ -459,7 +544,74 @@ if (qs('btnCollate')) qs('btnCollate').onclick = async function(){
   var checks = document.querySelectorAll('#generated input[type=checkbox]'); var ids = [];
   for (var i=0;i<checks.length;i++){ if (checks[i].checked) ids.push(checks[i].getAttribute('data-id')); }
   var k = key(); var items = sessionItems[k] || []; var chosen = ids.length ? items.filter(function(x){ return ids.indexOf(x.id)>=0; }) : items;
-  var descs = chosen.map(function(x){ return x.description; }); openModal('');
-  try{ var coll = await supabase.functions.invoke('ai', { body: { op:'collate', descriptions: descs } }); var text = (coll.data && coll.data.text) ? coll.data.text : ''; qs('modalText').textContent = text; }catch(e){ qs('modalText').textContent = (e && e.message) ? e.message : String(e); }
+  var descs = chosen.map(function(x){ return x.description; }); openModal(''); var l=document.getElementById('modalLoading'); if(l) l.style.display='flex';
+  try{ var coll = await supabase.functions.invoke('ai', { body: { op:'collate', descriptions: descs } }); var text = (coll.data && coll.data.text) ? coll.data.text : ''; qs('modalText').textContent = text; }catch(e){ var l=document.getElementById('modalLoading'); if(l) l.style.display='none'; qs('modalText').textContent = (e && e.message) ? e.message : String(e); }
 };
+
+// --- Selection summary box ---
+function updateCollectBox(){
+  var wrap = document.getElementById('collectTags'); var box = document.getElementById('collectBox');
+  if (!wrap || !box) return;
+  var checks = document.querySelectorAll('#generated input[type=checkbox]');
+  var items = [];
+  checks.forEach(function(cb){
+    if (cb.checked){
+      var item = cb.closest('.item');
+      var title = item ? (item.querySelector('h4')?.textContent || 'Item') : 'Item';
+      var id = cb.getAttribute('data-id') || '';
+      items.push({id:id, title:title});
+    }
+  });
+  if (!items.length){ box.style.display='none'; wrap.innerHTML=''; return; }
+  box.style.display='block';
+  wrap.innerHTML = items.map(function(it){ return '<span class="tag" data-id="'+it.id+'">'+it.title+' <span class="x" title="Remove">×</span></span>'; }).join('');
+  wrap.querySelectorAll('.tag .x').forEach(function(x){
+  x.addEventListener('click', function(){
+    var tag = this.parentElement;
+    var pid = tag.getAttribute('data-id');
+    var cb = document.querySelector('#generated input[type=checkbox][data-id="'+pid+'"]');
+    if (cb){
+      cb.checked = false;
+      try{ cb.dispatchEvent(new Event('change', {bubbles:true})); }catch(e){ /* noop */ }
+    }
+    // Remove the tag immediately for responsive UI, then refresh summary
+    try{ tag.remove(); }catch(e){}
+    updateCollectBox();
+  });
+});
+}
+// react to checkbox changes
+document.getElementById('generated')?.addEventListener('change', function(e){
+  if (e.target && e.target.matches('input[type=checkbox]')) updateCollectBox();
+});
+// observe list when new items render
+(function(){
+  var target = document.getElementById('generated');
+  if (!target || !window.MutationObserver) return;
+  var mo = new MutationObserver(function(){ updateCollectBox(); });
+  mo.observe(target, { childList:true, subtree:false });
+})();
+// --- Mobile dropdown that calls view(name) on mobile only ---
+(function(){
+  var sel = document.getElementById('appMenuSelect'); if (!sel) return;
+  function build(){
+    sel.innerHTML='';
+    document.querySelectorAll('.chip[data-tab]').forEach(function(t){
+      var opt = document.createElement('option');
+      opt.value = t.getAttribute('data-tab');
+      opt.textContent = (t.textContent || opt.value).trim();
+      sel.appendChild(opt);
+    });
+    var active = document.querySelector('.chip[data-tab].active');
+    if (active) sel.value = active.getAttribute('data-tab');
+  }
+  build();
+  sel.addEventListener('change', function(){ if (!window.matchMedia('(max-width: 768px)').matches) return;  if (window.matchMedia('(max-width: 768px)').matches && typeof window.view === 'function'){ window.view(sel.value); }
+  });
+  document.addEventListener('click', function(e){
+    var t = e.target.closest && e.target.closest('.chip[data-tab]'); if (!t) return;
+    var name = t.getAttribute('data-tab'); var opt = sel.querySelector('option[value="'+name+'"]'); if (opt) sel.value = name;
+  });
+})();
+
 </script></body></html>
