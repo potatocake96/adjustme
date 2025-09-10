@@ -269,9 +269,11 @@ document.getElementById('signin').onclick = async function(){
   function resetRedirectURL(){
   try{
     if (location.protocol === 'http:' || location.protocol === 'https:'){
-      // Redirect back to THIS login file (keeps your current filename)
       return location.origin + location.pathname;
     }
+  }catch(e){}
+  return 'https://USERNAME.github.io/REPO/login.html'; // fallback for environments without origin
+}
   }catch(e){}
   // Fallback for file:// (open a local server at 5173 if possible)
   return 'http://localhost:5173' + (location.pathname || '/login.html');
@@ -307,7 +309,7 @@ document.getElementById('signin').onclick = async function(){
     const password = document.getElementById('su_password')?.value;
     const msg = document.getElementById('su_msg'); if (msg) msg.textContent = 'Creating account…';
     try{
-      const { error } = await sb.auth.signUp({ email, password, options: { data: { full_name: name } } });
+      const { error } = await sb.auth.signUp({ email, password, options: { data: { full_name: name }, emailRedirectTo: resetRedirectURL() } });
       if (error) throw error;
       if (msg) msg.textContent = 'Check your email to confirm your account.';
     }catch(e){ if (msg) msg.textContent = e?.message || String(e); }
