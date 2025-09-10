@@ -104,6 +104,75 @@ footer .foot{display:flex;justify-content:space-between;align-items:center;gap:1
 /* Motion */
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
+
+/* --- Mobile layout fixes --- */
+@media (max-width: 640px) {
+  .wrap {
+    padding: 12px 14px;
+  }
+
+  header .brand .word {
+    font-size: 16px;
+  }
+
+  .card-pad {
+    padding: 16px;
+  }
+
+  .row.two, .row.actions {
+    grid-template-columns: 1fr !important;
+  }
+
+  .row.actions .btn.primary {
+    width: 100% !important;
+    min-width: unset;
+  }
+
+  input, select, textarea, button {
+    font-size: 16px; /* prevents iOS zoom on focus */
+  }
+
+  .cards-grid,
+  .app-grid,
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .modal {
+    width: 95% !important;
+    margin: 0 auto;
+  }
+
+  nav.nav {
+    gap: 6px;
+  }
+
+  .chip {
+    padding: 8px 10px;
+    font-size: 14px;
+    min-height: 34px;
+  }
+}
+
+
+/* --- Deeper mobile fixes (v2) --- */
+@media (max-width: 640px) {
+  .section-title { font-size: 18px; }
+  .item .top { display: block; }
+  .item .righttools { justify-content: flex-start; margin-top: 8px; flex-wrap: nowrap; gap: 10px; }
+  .item .righttools label.small { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .item .righttools .btn { min-height: 36px; padding: 6px 10px; }
+  .item h4 { font-size: 15px; }
+  .item .meta { font-size: 12px; }
+  .brand .word { font-size: 16px; }
+  header .wrap { padding: 10px 12px !important; }
+  .nav { min-height: 40px; }
+  .chip { padding: 8px 10px; font-size: 14px; min-height: 34px; }
+  #how { grid-template-columns: 1fr !important; }
+}
+/* Ensure the righttools don't compress into a few-pixel column */
+.item .righttools { flex: 0 0 auto; }
+
 </style></head><body>
 <header><div class="wrap" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0"><div class="brand"><span class="word">adjust<span class="me">ME</span></span></div><div class="navwrap"><nav class="nav"><a class="chip" href="index.html">Home</a></nav></div></div></header>
 <main class="wrap" style="display:grid; place-items:center; min-height:calc(100vh - 120px)"><section class="card card-pad" style="width:min(520px,92vw)">
