@@ -1,0 +1,396 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>adjustME — App</title><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"/><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.3/dist/umd/supabase.min.js"></script><style>
+:root{
+  --bg:#F7FAF9; --surface:#FFFFFF; --ink:#0B1220; --ink-2:#475569; --muted:#667085; --border:#E6E8EC;
+  --brand:#10B981; --brand-2:#2DD4BF; --brand-3:#ECFDF5;
+  --focus:0 0 0 3px rgba(16,185,129,.35);
+  --max:1280px; --radius:16px; --radius-lg:22px; --radius-xl:28px;
+  --shadow-sm:0 8px 18px rgba(2,6,23,.06); --shadow:0 24px 50px rgba(2,6,23,.12);
+  --dur-fast:.16s; --dur:.28s; --dur-slow:.45s; --ease:cubic-bezier(.22,.61,.36,1)
+}
+*{box-sizing:border-box}html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display",Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.6;opacity:0;transform:translateY(4px)
+}
+body.ready{opacity:1;transform:none;transition:opacity var(--dur-slow) var(--ease),transform var(--dur-slow) var(--ease)}
+a{color:inherit;text-decoration:none}
+.wrap{width:100%;max-width:var(--max);margin:0 auto;padding:16px 20px}
+/* Header / nav */
+header{position:sticky;top:0;z-index:40;background:rgba(255,255,255,.9);backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid var(--border)}
+.brand{font-weight:900;letter-spacing:-.015em;display:flex;align-items:center;gap:10px}
+.brand .word{font-size:18px}.brand .me{color:var(--brand)}
+.navwrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nav{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;min-height:46px;padding-bottom:4px}
+.nav::-webkit-scrollbar{display:none}
+/* Chips / buttons */
+.chip{background:#fff;border:1px solid var(--border);border-radius:999px;padding:10px 14px;font-weight:800;min-height:40px;cursor:pointer;white-space:nowrap;transition:transform var(--dur-fast) var(--ease),box-shadow var(--dur) var(--ease),background var(--dur) var(--ease)}
+.chip:hover{transform:translateY(-1px)}.chip.active{background:var(--brand-3);border-color:#CFFAE9;color:#065F46}
+button{font:inherit;border:1px solid var(--border);border-radius:12px;background:#fff;color:var(--ink);min-height:44px;padding:10px 16px;cursor:pointer;font-weight:700;transition:transform var(--dur-fast) var(--ease),box-shadow var(--dur) var(--ease),background var(--dur) var(--ease)}
+button:focus{outline:none;box-shadow:var(--focus)}
+.btn{background:#fff}.btn:hover{background:#FAFAFA}.btn:active{transform:translateY(1px) scale(.99)}
+.btn.primary{background:linear-gradient(180deg,var(--brand),var(--brand-2));color:#073328;border-color:#8CF0E2}
+.btn.ghost{background:#fff;border-color:var(--border)}
+.btn.sm{min-height:34px;padding:6px 10px;font-weight:600}
+/* Form controls */
+label.small{display:block;margin:0 0 8px;color:#3f4a5a;font-weight:600;font-size:13px;letter-spacing:.02em}
+input,textarea,select{font:inherit;border:1px solid var(--border);border-radius:12px;background:#fff;color:var(--ink);width:100%}
+input,select{height:44px;padding:0 14px}textarea{padding:12px 14px}
+input::placeholder,textarea::placeholder{color:#94A3B8}
+input:focus,textarea:focus,select:focus{outline:none;box-shadow:var(--focus)}
+/* Cards & layout */
+main{padding:14px 0 calc(28px + env(safe-area-inset-bottom))}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);transition:box-shadow var(--dur) var(--ease),transform var(--dur-fast) var(--ease)}
+.card:hover{box-shadow:var(--shadow)}.card-pad{padding:22px}
+.section-title{margin:0 0 12px;font-size:22px;letter-spacing:-.01em}
+.app-grid{display:grid;gap:22px}
+@media(min-width:1120px){.app-grid{grid-template-columns:minmax(420px,480px) 1fr}}
+.sticky-card{position:sticky;top:92px}
+@media(max-width:768px){.sticky-card{position:static;top:auto}}
+.grid{display:grid;gap:14px}
+.row{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:820px){.row.two{grid-template-columns:1fr 1fr;align-items:end}}
+.row.actions{grid-template-columns:1fr}
+@media(min-width:820px){.row.actions{grid-template-columns:1fr auto;align-items:end}}
+.row.actions .btn.primary{min-width:220px}
+@media(max-width:819px){.row.actions .btn.primary{width:100%}}
+.stack{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.right{justify-content:flex-end}
+/* Lists */
+.results{display:grid;gap:14px}
+.item{border:1px solid var(--border);border-radius:14px;padding:14px;background:#fff;word-break:break-word;animation:rise var(--dur) var(--ease) both}
+.item h4{margin:0 0 4px;font-size:16px}
+.item .meta{color:#6B7280;font-size:13px}
+.item .top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.item .righttools{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cards-grid{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:980px){.cards-grid{grid-template-columns:1fr 1fr}}
+.student-card{padding:16px;border-radius:14px;border:1px solid var(--border);background:#fff;animation:rise var(--dur) var(--ease) both}
+.student-card h4{margin:0 0 4px;font-size:16px}
+.tools{display:flex;gap:10px;flex-wrap:wrap}
+/* Modal + typography */
+.modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,.35);display:none;align-items:center;justify-content:center;z-index:60;backdrop-filter:blur(2px);opacity:0;transition:opacity var(--dur) var(--ease)}
+.modal-backdrop.show{display:flex;opacity:1}
+.modal{width:min(820px,92vw);background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);transform:translateY(10px) scale(.98);opacity:.98;transition:transform var(--dur) var(--ease),opacity var(--dur) var(--ease);max-height:90vh;overflow:auto}
+.modal.show{transform:translateY(0) scale(1);opacity:1}
+.modal-header{padding:16px 18px;border-bottom:1px solid var(--border)}
+.modal-title{font-weight:900;letter-spacing:.01em}
+.modal-body{padding:18px}
+.modal-actions{padding:16px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+/* Make paragraph look like app text (no serif) */
+.pretty{white-space:pre-wrap;line-height:1.7;font-family:inherit;background:#F9FFFD;border:1px solid #D1FAF0;padding:16px;border-radius:12px}
+/* Feedback */
+.toast{position:fixed;left:50%;top:18px;transform:translateX(-50%) translateY(-12px);background:#fff;color:#0B1220;padding:12px 16px;border:1px solid var(--border);border-radius:999px;box-shadow:var(--shadow-sm);opacity:0;transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease);z-index:80}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.spinner{width:18px;height:18px;border-radius:50%;border:2px solid #e8e8e8;border-top-color:var(--brand);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.skeleton{position:relative;overflow:hidden;background:linear-gradient(90deg,#F2F4F6 25%,#F8FAFB 37%,#F2F4F6 63%);background-size:400% 100%;animation:shimmer 1.2s ease-in-out infinite}
+@keyframes shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
+/* Landing (unchanged) */
+.hero{padding:48px 0 30px}.hero h1{margin:0;font-size:clamp(32px,6vw,56px);letter-spacing:-.02em}.hero p{margin:12px 0 0;max-width:760px;color:var(--ink-2);font-size:18px}
+.cta{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(180deg,var(--brand),var(--brand-2));color:#073328;padding:12px 18px;border-radius:999px;font-weight:900;min-height:44px;transition:transform var(--dur-fast) var(--ease)}
+.cta:hover{transform:translateY(-1px)}.cta.secondary{background:#fff;color:#0B1220;border:1px solid var(--border)}
+.preview{border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#FFFFFF 0%,#F5FFFD 100%);padding:16px;box-shadow:var(--shadow-sm)}
+.preview .bar{height:44px;border:1px solid var(--border);border-radius:12px;background:#fff;display:flex;align-items:center;gap:6px;padding:0 10px;margin-bottom:12px}
+.preview .dot{width:10px;height:10px;border-radius:50%;background:#E5E7EB}
+.preview .line{height:12px;background:#E8F7F2;border-radius:6px;width:60%}
+.preview .cardRow{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.preview .mini{background:#fff;border:1px solid var(--border);border-radius:12px;padding:10px;min-height:84px;animation:rise var(--dur) var(--ease) both}
+.hero-grid{display:grid;gap:22px;grid-template-columns:1fr}
+@media(min-width:900px){.hero-grid{grid-template-columns:1.1fr .9fr}}
+/* Footer */
+footer{border-top:1px solid var(--border);background:#fff;margin-top:30px}
+footer .foot{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0;color:#6B7280;font-size:14px;flex-wrap:wrap}
+/* Motion */
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
+</style></head><body>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<header><div class="wrap" style="display:flex;justify-content:space-between;align-items:center;padding:12px 0"><div class="brand"><span class="word">adjust<span class="me">ME</span></span></div><div class="navwrap"><nav class="nav"><button class="chip active" data-tab="create">Create</button><button class="chip" data-tab="students">Students</button><button class="chip" data-tab="help">Help</button><button id="signout" class="chip">Sign out</button></nav></div></div></header>
+<main class="wrap">
+  <div id="view-create" class="app-grid">
+    <section class="card card-pad sticky-card">
+      <h2 class="section-title">Create adjustments</h2>
+      <div class="grid">
+        <div class="row two">
+          <div><label class="small">Teacher</label><input id="teacher" placeholder="e.g., Ms Taylor"/><div id="nameMsg" class="small"></div></div>
+          <div><label class="small">Date</label><input id="day" type="date"/></div>
+        </div>
+        <div class="row actions">
+          <div><label class="small">Student</label><select id="studentSel"></select></div>
+          <div class="stack right"><span id="spinnerGen" class="spinner" style="display:none"></span><button id="btnGenerate" class="btn primary">Create adjustments</button></div>
+        </div>
+      </div>
+      <div id="genMsg" class="small" style="margin-top:8px"></div>
+      <div class="stack" style="margin-top:10px"><button id="btnCollate" class="btn" disabled>Make paragraph</button><button id="btnClear" class="btn">Clear</button></div>
+    </section>
+    <section class="card card-pad">
+      <h3 class="section-title" style="font-size:20px">Generated items</h3>
+      <div id="emptyGen" class="small">No items yet for this student and date.</div>
+      <div id="generated" class="results"></div>
+    </section>
+  </div>
+
+  <section id="view-students" class="card card-pad" style="display:none">
+    <div class="stack" style="justify-content:space-between; align-items:center">
+      <h2 class="section-title" style="margin:0">Students</h2>
+      <div class="stack" style="align-items:flex-end">
+        <div style="min-width:220px"><label class="small">Search</label><input id="search" placeholder="Type a name…"/></div>
+        <button id="add" class="btn">Add</button>
+      </div>
+    </div>
+    <div id="list" class="cards-grid" style="margin-top:12px"></div>
+    <div id="editor" class="card card-pad" style="display:none; margin-top:12px">
+      <h3 id="edTitle" class="section-title" style="margin-top:0">Add student</h3>
+      <div class="grid">
+        <div><label class="small">Student name</label><input id="edName"/></div>
+      </div>
+      <div class="row two">
+        <div><label class="small">Learning Barriers (one per line)</label><textarea id="edBarriers"></textarea></div>
+        <div><label class="small">Recommended Adjustments (one per line)</label><textarea id="edAdjustments"></textarea></div>
+      </div>
+      <div>
+        <label class="small">Paste your notes (optional)</label>
+        <textarea id="edRaw" placeholder="Paste notes…"></textarea>
+        <div class="small">Use <em>Scan my notes</em> to fill bullet points automatically.</div>
+        <div class="stack" style="margin-top:8px"><button id="analyze" class="btn">Scan my notes</button><span id="spinnerAnalyze" class="spinner" style="display:none"></span><span id="analyzeMsg" class="small"></span></div>
+      </div>
+      <div class="stack" style="margin-top:8px"><button id="save" class="btn primary">Save student</button><button id="cancel" class="btn">Cancel</button></div>
+    </div>
+  </section>
+
+  <section id="view-help" class="card card-pad" style="display:none">
+    <h2 class="section-title">How to use adjustME</h2>
+    <div class="grid" style="gap:14px">
+      <div class="card card-pad"><h3 style="margin:0 0 6px">1) Add students</h3><p class="small">Open <b>Students</b> → <b>Add</b>. Enter a name. Add any known <i>Learning Barriers</i> and <i>Recommended Adjustments</i> as short bullets.</p></div>
+      <div class="card card-pad"><h3 style="margin:0 0 6px">2) (Optional) Scan your notes</h3><p class="small">Paste your raw notes in the student editor and press <b>Scan my notes</b>. Edit anything—you’re in control.</p></div>
+      <div class="card card-pad"><h3 style="margin:0 0 6px">3) Create adjustments</h3><p class="small">Go to <b>Create</b>. Choose a student, set the date, and press <b>Create adjustments</b>. Items appear on the right panel; nothing is saved to the server.</p></div>
+      <div class="card card-pad"><h3 style="margin:0 0 6px">4) Make a paragraph</h3><p class="small">Tick a few items and press <b>Make paragraph</b>. A clean paragraph appears in a popout—press <b>Copy</b> to paste into your report.</p></div>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap foot"><div>© Simon Dass</div><div class="small">Private by design — only student profiles are saved.</div></div></footer>
+
+<div id="modalBackdrop" class="modal-backdrop"><div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-header"><div id="modalTitle" class="modal-title">Paragraph ready</div></div><div class="modal-body"><pre id="modalText" class="pretty"></pre></div><div class="modal-actions"><button id="btnCopy" class="btn">Copy</button><button id="btnClose" class="btn primary">Close</button></div></div></div>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('ready');});
+var supabase = window.supabase.createClient("https://fskoqwpzomolfywimrjj.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZza29xd3B6b21vbGZ5d2ltcmpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc0MDg2NjEsImV4cCI6MjA3Mjk4NDY2MX0.KH9aTJgF9F2BGokJAjOtVkrjybTpVamvXGu7aVxGou8");
+function qs(id){ return document.getElementById(id); }
+function show(el, on){ el.style.display = on ? "" : "none"; }
+function norm(s){ return (s||"").replace(/\s+/g," ").trim().toLowerCase(); }
+function toast(msg){ var t=qs('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(function(){ t.classList.remove('show'); }, 2200); }
+
+// Tabs / views
+var tabs = document.querySelectorAll('.chip[data-tab]');
+function view(name){
+  qs('view-create').style.display = (name==='create') ? '' : 'none';
+  qs('view-students').style.display = (name==='students') ? '' : 'none';
+  qs('view-help').style.display = (name==='help') ? '' : 'none';
+  for (var i=0;i<tabs.length;i++){ tabs[i].classList.toggle('active', tabs[i].dataset.tab===name); }
+}
+for (var i=0;i<tabs.length;i++){ (function(b){ b.onclick = function(){ view(b.dataset.tab); }; })(tabs[i]); }
+
+// Auth bootstrap
+var currentUser = null; var students = []; var sessionItems = {}; var sessionSets = {};
+(async function(){
+  var ses = await supabase.auth.getSession();
+  if (!ses.data || !ses.data.session){ location.href = "login.html"; return; }
+  currentUser = ses.data.session.user;
+  try { var nm = sessionStorage.getItem('adj_greet_name'); if (nm){ toast('hello ' + nm); sessionStorage.removeItem('adj_greet_name'); } } catch(e){}
+  var display = (currentUser.user_metadata && currentUser.user_metadata.display_name) ? currentUser.user_metadata.display_name : "";
+  if (display) qs('teacher').value = display;
+  qs('day').value = new Date().toISOString().slice(0,10);
+  await ensureProfile(); await loadStudents(); view('create'); renderResults();
+})();
+
+// Signout (robust)
+qs('signout').onclick = async function(){
+  try { await supabase.auth.signOut({ scope: 'local' }); } catch(e){}
+  try { Object.keys(localStorage).forEach(function(k){ if (k.indexOf('sb-')===0 && k.indexOf('-auth-token')>0) localStorage.removeItem(k); }); } catch(e){}
+  location.replace('login.html');
+};
+
+// Profile ensure + name autosave
+async function ensureProfile(){ await supabase.from('profiles').upsert({ id: currentUser.id }, { onConflict: 'id' }); }
+var saveTimer = null;
+async function saveTeacherName(){
+  var name = (qs('teacher').value||"").trim(); if (!name){ qs('nameMsg').textContent=''; return; }
+  qs('nameMsg').textContent='Saving…';
+  var res = await supabase.auth.updateUser({ data: { display_name: name } });
+  qs('nameMsg').textContent = res.error ? res.error.message : 'Saved';
+  if (!res.error) setTimeout(function(){ qs('nameMsg').textContent=''; }, 1500);
+}
+qs('teacher').addEventListener('blur', saveTeacherName);
+qs('teacher').addEventListener('input', function(){ clearTimeout(saveTimer); saveTimer=setTimeout(saveTeacherName, 700); });
+
+// Students CRUD
+async function loadStudents(){
+  var wrap = qs('list');
+  if (wrap){ wrap.innerHTML = ''; for (var i=0;i<4;i++){ var sk = document.createElement('div'); sk.className='student-card skeleton'; sk.style.height='82px'; wrap.appendChild(sk); } }
+  var res = await supabase.from('students').select('*').order('created_at', { ascending: false });
+  students = res.data || []; renderStudents(); rebuildSelects();
+}
+function renderStudents(){
+  var q = (qs('search')?qs('search').value:'').toLowerCase();
+  var wrap = qs('list'); if (!wrap) return; wrap.innerHTML = "";
+  var subset = []; for (var i=0;i<students.length;i++){ var s = students[i]; if (!q || (s.name||'').toLowerCase().indexOf(q)>=0) subset.push(s); }
+  if (!subset.length){ wrap.innerHTML = '<div class="small">No students yet.</div>'; return; }
+  subset.forEach(function(s2){
+    var card = document.createElement('div'); card.className = 'student-card';
+    var top = document.createElement('div'); top.className='stack'; top.style.justifyContent='space-between';
+    var left = document.createElement('div');
+    var h4 = document.createElement('h4'); h4.textContent = s2.name;
+    var meta = document.createElement('div'); meta.className='meta small'; meta.textContent = (s2.barriers||[]).length + ' barriers • ' + (s2.adjustments||[]).length + ' recommendations';
+    left.appendChild(h4); left.appendChild(meta);
+    var tools = document.createElement('div'); tools.className='tools';
+    var btnE = document.createElement('button'); btnE.className='btn'; btnE.textContent='Edit'; btnE.setAttribute('data-edit', s2.id);
+    var btnD = document.createElement('button'); btnD.className='btn'; btnD.textContent='Delete'; btnD.setAttribute('data-del', s2.id);
+    tools.appendChild(btnE); tools.appendChild(btnD);
+    top.appendChild(left); top.appendChild(tools);
+    card.appendChild(top);
+    wrap.appendChild(card);
+  });
+  attachStudentListHandlers();
+}
+function attachStudentListHandlers(){
+  var wrap = qs('list'); if (!wrap) return;
+  wrap.onclick = async function(e){
+    var t = e.target;
+    while (t && !t.hasAttribute('data-edit') && !t.hasAttribute('data-del') && t!==wrap) t = t.parentNode;
+    if (!t || t===wrap) return;
+    if (t.hasAttribute('data-edit')){
+      var id = t.getAttribute('data-edit'); var st = students.find(function(x){return x.id===id;}); openEditor(st);
+    } else if (t.hasAttribute('data-del')){
+      var id2 = t.getAttribute('data-del'); if (!confirm('Delete this student?')) return;
+      await supabase.from('students').delete().eq('id', id2); loadStudents();
+    }
+  };
+}
+function rebuildSelects(){ var sel = qs('studentSel'); if (!sel) return; sel.innerHTML = ""; students.forEach(function(s){ var o = document.createElement('option'); o.value = s.id; o.textContent = s.name; sel.appendChild(o); }); }
+if (qs('search')) qs('search').oninput = renderStudents;
+if (qs('add')) qs('add').onclick = function(){ openEditor(null); };
+if (qs('cancel')) qs('cancel').onclick = function(){ qs('editor').style.display = 'none'; };
+if (qs('save')) qs('save').onclick = async function () {
+  var id = qs('save').getAttribute('data-id') || "";
+  var name = qs('edName').value.trim();
+  var barriers = qs('edBarriers').value.split('\n').map(function(x){return x.trim();}).filter(Boolean);
+  var adjustments = qs('edAdjustments').value.split('\n').map(function(x){return x.trim();}).filter(Boolean);
+  if (!name){ alert('Name required'); return; }
+  if (id) await supabase.from('students').update({ name: name, barriers: barriers, adjustments: adjustments }).eq('id', id);
+  else await supabase.from('students').insert({ name: name, barriers: barriers, adjustments: adjustments });
+  qs('editor').style.display = 'none'; loadStudents();
+};
+function openEditor(student){
+  qs('editor').style.display = '';
+  qs('edTitle').textContent = student ? ('Edit: ' + student.name) : 'Add student';
+  qs('edName').value = student && student.name ? student.name : '';
+  qs('edBarriers').value = student && student.barriers ? student.barriers.join('\n') : '';
+  qs('edAdjustments').value = student && student.adjustments ? student.adjustments.join('\n') : '';
+  qs('edRaw').value = '';
+  qs('save').setAttribute('data-id', student && student.id ? student.id : '');
+  qs('editor').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// Notes parser & AI scan
+function parseIntoLists(text){
+  var b=[], a=[]; if (!text) return { b:b, a:a }; var lower = text.toLowerCase();
+  function collect(startIndex){
+    var out=[]; var lines = text.substring(startIndex).split('\n');
+    for (var i=0;i<lines.length;i++){ var L = lines[i].trim(); var low = L.toLowerCase();
+      if (low.indexOf('##adjustments##')===0 || low.indexOf('##barriers##')===0 || low.indexOf('learning barriers')===0 || low.indexOf('recommended adjustments')===0) break;
+      if (L.indexOf('- ')===0 || L.indexOf('* ')===0) out.push(L.slice(2).trim());
+    } return out;
+  }
+  var idxB = lower.indexOf('##barriers##'); var idxA = lower.indexOf('##adjustments##');
+  if (idxB>=0) b = collect(idxB + '##barriers##'.length);
+  if (idxA>=0) a = collect(idxA + '##adjustments##'.length);
+  if (!b.length){ var hb = lower.indexOf('learning barriers'); if (hb>=0) b = collect(hb + 'learning barriers'.length); }
+  if (!a.length){ var ha = lower.indexOf('recommended adjustments'); if (ha>=0) a = collect(ha + 'recommended adjustments'.length); }
+  if (!b.length && !a.length){ var lines2 = text.split('\n'); for (var j=0;j<lines2.length;j++){ var t = lines2[j].trim(); if (t) b.push(t); } }
+  return { b:b, a:a };
+}
+if (qs('analyze')) qs('analyze').onclick = async function(){
+  var raw = qs('edRaw').value.trim(); var msg = qs('analyzeMsg'); if (!raw){ msg.textContent = 'Paste some notes first.'; return; }
+  show(qs('spinnerAnalyze'), true); msg.textContent = 'Scanning…';
+  try {
+    var res = await supabase.functions.invoke('ai', { body: { op:'analyze', raw: raw } });
+    if (res.error){ msg.textContent = res.error.message; show(qs('spinnerAnalyze'), false); return; }
+    var text = (res.data && res.data.text) ? res.data.text : '';
+    var parsed = parseIntoLists(text);
+    qs('edBarriers').value = parsed.b.join('\n'); qs('edAdjustments').value = parsed.a.join('\n');
+    msg.textContent = parsed.b.length + ' barriers • ' + parsed.a.length + ' adjustments found.';
+  } catch(e){ msg.textContent = e && e.message ? e.message : String(e); }
+  show(qs('spinnerAnalyze'), false);
+};
+
+// Generate / session-only list
+if (qs('studentSel')) qs('studentSel').onchange = renderResults;
+if (qs('day')) qs('day').onchange = renderResults;
+function key(){ return (qs('studentSel').value||'') + '|' + (qs('day').value || new Date().toISOString().slice(0,10)); }
+function showGenSkeleton(n){ var wrap = qs('generated'); wrap.innerHTML=''; for (var i=0;i<n;i++){ var sk = document.createElement('div'); sk.className='item skeleton'; sk.style.height='86px'; wrap.appendChild(sk); } qs('emptyGen').style.display='none'; qs('btnCollate').disabled = true; }
+function renderResults(){
+  var k = key(); var list = sessionItems[k] || []; var wrap = qs('generated'); wrap.innerHTML = '';
+  qs('emptyGen').style.display = list.length ? 'none' : ''; qs('btnCollate').disabled = !list.length;
+  list.forEach(function(it){
+    var div = document.createElement('div'); div.className = 'item';
+    var top = document.createElement('div'); top.className='top';
+    var left = document.createElement('div');
+    var h4 = document.createElement('h4'); h4.textContent = it.adjustment;
+    var meta = document.createElement('div'); meta.className='meta'; meta.textContent = it.relevant_barrier || '';
+    left.appendChild(h4); left.appendChild(meta);
+    var right = document.createElement('div'); right.className='righttools';
+    var lab = document.createElement('label'); lab.className='small';
+    var cb = document.createElement('input'); cb.type='checkbox'; cb.setAttribute('data-id', it.id);
+    lab.appendChild(cb); lab.appendChild(document.createTextNode(' Select'));
+    var btnC = document.createElement('button'); btnC.className='btn ghost sm'; btnC.textContent='Copy';
+    btnC.onclick = function(){ navigator.clipboard.writeText(it.description).then(function(){ toast('Copied'); }); };
+    right.appendChild(lab); right.appendChild(btnC);
+    top.appendChild(left); top.appendChild(right);
+    var body = document.createElement('div'); body.textContent = it.description;
+    div.appendChild(top); div.appendChild(body);
+    wrap.appendChild(div);
+  });
+}
+if (qs('btnClear')) qs('btnClear').onclick = function(){ sessionItems[key()] = []; sessionSets[key()] = new Set(); renderResults(); };
+if (qs('btnGenerate')) qs('btnGenerate').onclick = async function(){
+  var selId = qs('studentSel').value; var student = null;
+  for (var i=0;i<students.length;i++){ if (students[i].id===selId){ student = students[i]; break; } }
+  var teacher = qs('teacher').value.trim();
+  var dateISO = qs('day').value || new Date().toISOString().slice(0,10); var dd = dateISO.split('-').reverse().join('/');
+  var msg = qs('genMsg');
+  if (!student){ msg.textContent = 'Pick a student.'; return; }
+  if (!teacher){ msg.textContent = 'Add teacher name.'; return; }
+  show(qs('spinnerGen'), true); msg.textContent = 'Creating…'; showGenSkeleton(4);
+  try{
+    var res = await supabase.functions.invoke('ai', { body: { op:'generate', student: { name: student.name, barriers: student.barriers||[], adjustments: student.adjustments||[] }, teacher: teacher, date_ddmmyyyy: dd } });
+    if (res.error){ msg.textContent = res.error.message; show(qs('spinnerGen'), false); return; }
+    var items = (res.data && res.data.items) ? res.data.items : [];
+    var k = key(); if (!sessionItems[k]) sessionItems[k] = []; if (!sessionSets[k]) sessionSets[k] = new Set(sessionItems[k].map(function(x){return norm(x.adjustment);}));
+    var set = sessionSets[k]; var inserted = 0;
+    items.forEach(function(it, idx){
+      var keyAdj = norm(it.adjustment); if (!keyAdj || set.has(keyAdj)) return;
+      sessionItems[k].push({ id: String(Date.now()) + '-' + idx, adjustment: it.adjustment, relevant_barrier: it.relevant_barrier || null, description: it.description });
+      set.add(keyAdj); inserted++;
+    });
+    msg.textContent = inserted ? ('Added ' + inserted + ' new item' + (inserted>1?'s':'')) : 'No new items (duplicates skipped).';
+    renderResults();
+  }catch(e){ msg.textContent = e && e.message ? e.message : String(e); }
+  show(qs('spinnerGen'), false);
+};
+
+// Modal / collate
+var modalBackdrop = qs('modalBackdrop'); var modal = qs('modal');
+function openModal(text){ qs('modalText').textContent = text; modalBackdrop.classList.add('show'); modal.classList.add('show'); }
+function closeModal(){ modalBackdrop.classList.remove('show'); modal.classList.remove('show'); }
+modalBackdrop.addEventListener('click', function(e){ if (e.target === modalBackdrop) closeModal(); });
+qs('btnClose').onclick = closeModal;
+qs('btnCopy').onclick = async function(){ var txt = qs('modalText').textContent || ''; try{ await navigator.clipboard.writeText(txt); qs('btnCopy').textContent = 'Copied!'; setTimeout(function(){ qs('btnCopy').textContent = 'Copy'; }, 1200); }catch(e){ qs('btnCopy').textContent = 'Copy failed'; setTimeout(function(){ qs('btnCopy').textContent = 'Copy'; }, 1200); } };
+if (qs('btnCollate')) qs('btnCollate').onclick = async function(){
+  var checks = document.querySelectorAll('#generated input[type=checkbox]'); var ids = [];
+  for (var i=0;i<checks.length;i++){ if (checks[i].checked) ids.push(checks[i].getAttribute('data-id')); }
+  var k = key(); var items = sessionItems[k] || []; var chosen = ids.length ? items.filter(function(x){ return ids.indexOf(x.id)>=0; }) : items;
+  var descs = chosen.map(function(x){ return x.description; }); openModal('');
+  try{ var coll = await supabase.functions.invoke('ai', { body: { op:'collate', descriptions: descs } }); var text = (coll.data && coll.data.text) ? coll.data.text : ''; qs('modalText').textContent = text; }catch(e){ qs('modalText').textContent = (e && e.message) ? e.message : String(e); }
+};
+</script></body></html>
